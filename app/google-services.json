@@ -1,0 +1,147 @@
+{
+  "project_info": {
+    "project_number": "755638599910",
+    "firebase_url": "https://halo-projects.firebaseio.com",
+    "project_id": "halo-projects",
+    "storage_bucket": "halo-projects.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:755638599910:android:bc21d1116ec1c751",
+        "android_client_info": {
+          "package_name": "com.jae.youglish"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "755638599910-snf7kk3a2lrs4eh5q978dcfqao6v73vd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDntCmQhONTHuIRD2hjoZZpi7MBw2x35Gc"
+        },
+        {
+          "current_key": "AIzaSyBnaf6A3XQjfVI5LYNalXs3EGRMwnIsdZ0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:755638599910:android:7e8bd228a9a75ee9",
+        "android_client_info": {
+          "package_name": "com.jae.youglish.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "755638599910-snf7kk3a2lrs4eh5q978dcfqao6v73vd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDntCmQhONTHuIRD2hjoZZpi7MBw2x35Gc"
+        },
+        {
+          "current_key": "AIzaSyBnaf6A3XQjfVI5LYNalXs3EGRMwnIsdZ0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:755638599910:android:552761b35f0c9369",
+        "android_client_info": {
+          "package_name": "com.jae.radioapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "755638599910-snf7kk3a2lrs4eh5q978dcfqao6v73vd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDntCmQhONTHuIRD2hjoZZpi7MBw2x35Gc"
+        },
+        {
+          "current_key": "AIzaSyBnaf6A3XQjfVI5LYNalXs3EGRMwnIsdZ0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:755638599910:android:1b2e94661b390a29",
+        "android_client_info": {
+          "package_name": "com.jae.radioapp.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "755638599910-snf7kk3a2lrs4eh5q978dcfqao6v73vd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDntCmQhONTHuIRD2hjoZZpi7MBw2x35Gc"
+        },
+        {
+          "current_key": "AIzaSyBnaf6A3XQjfVI5LYNalXs3EGRMwnIsdZ0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
