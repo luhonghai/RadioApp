@@ -2,6 +2,7 @@ package com.jae.radioapp.ui;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,11 +12,18 @@ import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.jae.radioapp.R;
+import com.jae.radioapp.data.Callback;
+import com.jae.radioapp.data.evenbus.OpenStationEvent;
+import com.jae.radioapp.data.evenbus.PlayStatusEvent;
 import com.jae.radioapp.data.model.Area;
+import com.jae.radioapp.data.model.Station;
 import com.jae.radioapp.data.model.StationList;
 import com.jae.radioapp.databinding.FragmentChannelListBinding;
 import com.jae.radioapp.ui.adapter.ChannelAdapter;
 import com.mhealth.core.mvp.BaseTiFragment;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +36,8 @@ public class FragmentChannelList extends BaseTiFragment<FragmentChannelListPrese
     implements FragmentChannelListView{
 
     public static FragmentChannelList getInstance() {
-        return new FragmentChannelList();
+        FragmentChannelList fragmentChannelList = new FragmentChannelList();
+        return fragmentChannelList;
     }
 
     @NonNull
@@ -38,6 +47,18 @@ public class FragmentChannelList extends BaseTiFragment<FragmentChannelListPrese
     }
 
     FragmentChannelListBinding mBinding;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
     @Nullable
     @Override
@@ -55,7 +76,9 @@ public class FragmentChannelList extends BaseTiFragment<FragmentChannelListPrese
     private void initUI() {
         // list channel
         mBinding.rvChannel.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mBinding.rvChannel.setAdapter(new ChannelAdapter());
+        mBinding.rvChannel.setAdapter(new ChannelAdapter(station -> {
+            EventBus.getDefault().post(new OpenStationEvent(station));
+        }));
 
         mBinding.btnSelectArea.setOnClickListener(v -> openAreaOptions());
 
@@ -92,4 +115,13 @@ public class FragmentChannelList extends BaseTiFragment<FragmentChannelListPrese
     public void displayStations(StationList stationList) {
         ((ChannelAdapter)mBinding.rvChannel.getAdapter()).setStations(stationList.stations);
     }
+
+    // ---------- EVENT BUS ---------- //
+    @Subscribe
+    public void onPlayStatusEvent(PlayStatusEvent event) {
+        new Handler().postDelayed(() -> ((ChannelAdapter)mBinding.rvChannel.getAdapter()).setPlayStatus(event.playStatus), 200);
+//        ((ChannelAdapter)mBinding.rvChannel.getAdapter()).setPlayStatus(event.playStatus);
+    }
+
+
 }

@@ -2,35 +2,36 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="?attr/selectableItemBackground"
-        android:foreground="?attr/selectableItemBackground"
-        >
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorGray2"
+            />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="20dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="20dp">
+            android:padding="10dp"
+            >
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/img_logo"
-                android:layout_width="112dp"
-                android:layout_height="50dp"
+                android:layout_width="66dp"
+                android:layout_height="25dp"
                 android:layout_centerVertical="true"
-                tools:background="@drawable/ic_channel_holder"
                 android:padding="10dp"
                 android:scaleType="centerInside"
+                tools:background="@drawable/ic_channel_holder"
+                android:visibility="gone"
                 />
 
             <LinearLayout
@@ -42,26 +43,24 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_station_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="ラジオNIKKEI第1"
                     android:textColor="@color/txtDark"
-                    android:textSize="24dp"
-                    android:textStyle="bold"
-                    android:id="@+id/tv_station_name"
-                    />
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tv_station_name_ascii"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="ＨＢＣラジオ"
                     android:textColor="@color/txtDark2"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:id="@+id/tv_station_name_ascii"
-                    />
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <ImageView
@@ -70,17 +69,14 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                app:srcCompat="@drawable/ic_play"
-                android:tint="@color/colorGray"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:tint="@color/colorPlay"
+                app:srcCompat="@drawable/ic_pause"
+                android:padding="10dp"
+                android:layout_marginRight="10dp"
                 />
 
         </RelativeLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorGray2"
-            />
 
     </LinearLayout>
 
