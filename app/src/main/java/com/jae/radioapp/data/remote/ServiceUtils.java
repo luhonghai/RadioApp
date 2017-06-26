@@ -13,6 +13,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 /**
  * Created by alex on 4/13/17.
@@ -87,6 +88,38 @@ public class ServiceUtils {
                 .client(client)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        return retrofit.create(clazz);
+    }
+
+    public static <T> T createServiceXML(Class<T> clazz, String endPoint) {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        if (BuildConfig.DEBUG) {
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        } else {
+            interceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+        }
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+                .addNetworkInterceptor(new StethoInterceptor())
+                .addInterceptor(chain -> {
+                    Request original = chain.request();
+                    Request.Builder builder = original.newBuilder();
+                    builder.method(original.method(), original.body());
+                    return chain.proceed(builder.build());
+                })
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(15, TimeUnit.SECONDS)
+                .build();
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(endPoint)
+                .client(client)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build();
         return retrofit.create(clazz);
     }
