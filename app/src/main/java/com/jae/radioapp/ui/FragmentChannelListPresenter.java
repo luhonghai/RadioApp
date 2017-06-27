@@ -45,7 +45,9 @@ public class FragmentChannelListPresenter extends BaseTiPresenter<FragmentChanne
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(stationList -> {
-                    Timber.e("stations=" + stationList.stations.size());
+                    for (int i = 0; i < stationList.stations.size(); i++) {
+                        stationList.stations.get(i).areaId = areaId;
+                    }
                     sendToView(view -> view.displayStations(stationList));
                 }, throwable -> {
                     throwable.printStackTrace();

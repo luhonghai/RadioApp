@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RadioApp</string>
+    <string name="schedule">Today Schedule</string>
 </resources>

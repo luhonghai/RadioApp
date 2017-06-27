@@ -10,14 +10,14 @@ import java.util.List;
  * Created by alex on 6/26/17.
  */
 
-@Root(name = "stations")
-public class StationList {
+@Root(strict = false, name = "stations")
+public class Stations {
 
-    @Attribute(name = "area_id")
-    public String areaId;
-
-    @Attribute(name = "area_name")
-    public String areaName;
+//    @Attribute(name = "area_id")
+//    public String areaId;
+//
+//    @Attribute(name = "area_name")
+//    public String areaName;
 
     @ElementList(inline = true)
     public List<Station> stations;

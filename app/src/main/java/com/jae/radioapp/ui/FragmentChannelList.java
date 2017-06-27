@@ -12,12 +12,10 @@ import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.jae.radioapp.R;
-import com.jae.radioapp.data.Callback;
 import com.jae.radioapp.data.evenbus.OpenStationEvent;
 import com.jae.radioapp.data.evenbus.PlayStatusEvent;
 import com.jae.radioapp.data.model.Area;
-import com.jae.radioapp.data.model.Station;
-import com.jae.radioapp.data.model.StationList;
+import com.jae.radioapp.data.model.Stations;
 import com.jae.radioapp.databinding.FragmentChannelListBinding;
 import com.jae.radioapp.ui.adapter.ChannelAdapter;
 import com.mhealth.core.mvp.BaseTiFragment;
@@ -112,7 +110,7 @@ public class FragmentChannelList extends BaseTiFragment<FragmentChannelListPrese
 
 
     @Override
-    public void displayStations(StationList stationList) {
+    public void displayStations(Stations stationList) {
         ((ChannelAdapter)mBinding.rvChannel.getAdapter()).setStations(stationList.stations);
     }
 

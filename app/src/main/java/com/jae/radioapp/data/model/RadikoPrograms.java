@@ -7,10 +7,10 @@ import org.simpleframework.xml.Root;
  * Created by alex on 6/26/17.
  */
 
-@Root(name = "radiko")
-public class GetChannelResponse {
+@Root(strict = false, name = "radiko")
+public class RadikoPrograms {
 
     @Element(name = "stations")
-    public StationList stationList;
+    public Stations stationList;
 
 }

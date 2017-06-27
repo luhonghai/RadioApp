@@ -13,13 +13,9 @@ import android.view.ViewGroup;
 import com.jae.radioapp.R;
 import com.jae.radioapp.data.Callback;
 import com.jae.radioapp.data.evenbus.PlayStatusEvent;
-import com.jae.radioapp.data.model.Area;
 import com.jae.radioapp.data.model.Station;
-import com.jae.radioapp.data.model.StationList;
 import com.jae.radioapp.databinding.ItemChannelBinding;
 import android.support.v7.widget.RecyclerView;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;

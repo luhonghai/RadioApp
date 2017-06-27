@@ -1,5 +1,6 @@
 package com.jae.radioapp.ui;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.jae.radioapp.R;
 import com.jae.radioapp.data.evenbus.OpenStationEvent;
 import com.jae.radioapp.data.evenbus.PlayStatusEvent;
@@ -37,6 +39,7 @@ public class FragmentPlayerBottom extends BaseTiFragment<FragmentPlayerBottomPre
 
     FragmentPlayerBottomBinding mBinding;
     boolean isPlaying = false;
+    Station currentStation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,10 +78,19 @@ public class FragmentPlayerBottom extends BaseTiFragment<FragmentPlayerBottomPre
                 EventBus.getDefault().post(new PlayStatusEvent(PlayStatusEvent.PlayStatus.PLAYING));
             }
         });
+
+        mBinding.getRoot().setOnClickListener(v -> {
+            if (currentStation != null) {
+                Intent intent = OpenActivity.getIntent(getActivity(), OpenActivity.EXTRA_FRAGMENT_PLAYER_FULL);
+                intent.putExtra(OpenActivity.EXTRA_DATA, new Gson().toJson(currentStation));
+                getActivity().startActivity(intent);
+            }
+        });
     }
 
     @Subscribe
     public void onOpenStation(OpenStationEvent event) {
+        currentStation = event.station;
         Station station = event.station;
         mBinding.imgLogo.setImageURI(station.logoUrl);
         mBinding.tvStationName.setText(station.name);
@@ -88,5 +100,7 @@ public class FragmentPlayerBottom extends BaseTiFragment<FragmentPlayerBottomPre
         mBinding.imgPlayStatus.setImageResource(R.drawable.ic_pause);
         isPlaying = true;
     }
+
+
 
 }

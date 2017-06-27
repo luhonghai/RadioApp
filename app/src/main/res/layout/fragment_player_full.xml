@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBlack">
+
+        <!--toolbar-->
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/tool_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorBlack"
+            app:navigationIcon="@drawable/ic_back"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_station_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFF"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    tools:text="ラジオNIKKEI第1" />
+
+                <TextView
+                    android:id="@+id/tv_station_name_ascii"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFF"
+                    tools:text="ＨＢＣラジオ" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/layout_bottom"
+            android:layout_below="@+id/tool_bar"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="18dp"
+                android:text="@string/schedule"
+                android:textColor="#FFF"
+                android:textStyle="bold"
+                android:padding="5dp"
+                android:textAllCaps="true"
+                />
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                style="?android:attr/progressBarStyleSmall"
+                android:padding="10dp"
+                android:id="@+id/pb_loading"
+                />
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_programs"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@+id/layout_bottom"
+            android:background="@color/lineDivider" />
+
+        <LinearLayout
+            android:id="@+id/layout_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <ImageView
+                android:id="@+id/btn_record"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:padding="10dp"
+                android:tint="#FFF"
+                app:srcCompat="@drawable/ic_record"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark" />
+
+            <ImageView
+                android:id="@+id/btn_play_pause"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:padding="10dp"
+                android:tint="#FFF"
+                app:srcCompat="@drawable/ic_play_circle"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark" />
+
+            <ImageView
+                android:id="@+id/btn_sleep_timer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:padding="10dp"
+                android:tint="#FFF"
+                app:srcCompat="@drawable/ic_alarm"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark" />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

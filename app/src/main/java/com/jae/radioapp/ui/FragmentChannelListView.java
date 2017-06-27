@@ -1,6 +1,6 @@
 package com.jae.radioapp.ui;
 
-import com.jae.radioapp.data.model.StationList;
+import com.jae.radioapp.data.model.Stations;
 import com.mhealth.core.mvp.BaseTiView;
 
 /**
@@ -9,5 +9,5 @@ import com.mhealth.core.mvp.BaseTiView;
 
 public interface FragmentChannelListView extends BaseTiView{
 
-    void displayStations(StationList stationList);
+    void displayStations(Stations stationList);
 }
