@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.jae.radioapp.R;
 import com.jae.radioapp.data.Callback;
-import com.jae.radioapp.data.evenbus.PlayStatusEvent;
 import com.jae.radioapp.data.model.Station;
 import com.jae.radioapp.databinding.ItemChannelBinding;
 import android.support.v7.widget.RecyclerView;
@@ -31,7 +30,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     List<Station> mStations;
 
     Station selectedStation;
-    PlayStatusEvent.PlayStatus playStatus = PlayStatusEvent.PlayStatus.PLAYING;
+    boolean isPlaying;
 
     public ChannelAdapter(Callback<Station> stationCallback) {
         this.stationCallback = stationCallback;
@@ -55,7 +54,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         binding.tvStationNameAscii.setText(station.asciiName);
 
         if (selectedStation != null && selectedStation.id.equals(station.id)) {
-            if (playStatus != null && playStatus.equals(PlayStatusEvent.PlayStatus.PLAYING)) {
+            if (isPlaying) {
                 AnimationDrawable animation = (AnimationDrawable)
                         ContextCompat.getDrawable(binding.getRoot().getContext(), R.drawable.ic_equalizer_white_36dp);
                 DrawableCompat.setTintList(animation, null);
@@ -89,8 +88,8 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         notifyDataSetChanged();
     }
 
-    public void setPlayStatus(PlayStatusEvent.PlayStatus playStatus) {
-        this.playStatus = playStatus;
+    public void setIsPlaying(boolean isPlaying) {
+        this.isPlaying = isPlaying;
         notifyDataSetChanged();
     }
 
@@ -101,7 +100,6 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         selectedStation = station;
         v.postDelayed(() -> notifyDataSetChanged(), 200);
-
     }
 
     class ChannelViewHolder extends RecyclerView.ViewHolder {

@@ -14,7 +14,6 @@ import com.google.gson.Gson;
 import com.jae.radioapp.R;
 import com.jae.radioapp.data.evenbus.MediaPlayerStateChangeEvent;
 import com.jae.radioapp.data.evenbus.OpenStationEvent;
-import com.jae.radioapp.data.evenbus.PlayStatusEvent;
 import com.jae.radioapp.data.model.Station;
 import com.jae.radioapp.databinding.FragmentPlayerBottomBinding;
 import com.jae.radioapp.player.MediaPlayerService;
@@ -73,12 +72,14 @@ public class FragmentPlayerBottom extends BaseTiFragment<FragmentPlayerBottomPre
         mBinding.imgPlayStatus.setOnClickListener(v -> {
             if (isPlaying) {
                 mBinding.imgPlayStatus.setImageResource(R.drawable.ic_play);
-                isPlaying = false;
-                EventBus.getDefault().post(new PlayStatusEvent(PlayStatusEvent.PlayStatus.PAUSE));
+                Intent intent = new Intent(getActivity(), MediaPlayerService.class);
+                intent.setAction(MediaPlayerService.ACTION_PAUSE);
+                getActivity().startService(intent);
             } else {
                 mBinding.imgPlayStatus.setImageResource(R.drawable.ic_pause);
-                isPlaying = true;
-                EventBus.getDefault().post(new PlayStatusEvent(PlayStatusEvent.PlayStatus.PLAYING));
+                Intent intent = new Intent(getActivity(), MediaPlayerService.class);
+                intent.setAction(MediaPlayerService.ACTION_RESUME);
+                getActivity().startService(intent);
             }
         });
 
@@ -101,7 +102,7 @@ public class FragmentPlayerBottom extends BaseTiFragment<FragmentPlayerBottomPre
     @Override
     public void hideLoading() {
 //        super.hideLoading();
-        mBinding.pbLoading.setVisibility(View.GONE);
+        mBinding.pbLoading.setVisibility(View.INVISIBLE);
         mBinding.imgPlayStatus.setVisibility(View.VISIBLE);
     }
 
@@ -129,7 +130,6 @@ public class FragmentPlayerBottom extends BaseTiFragment<FragmentPlayerBottomPre
         mBinding.tvStationName.setText(station.name);
         mBinding.tvStationNameAscii.setText(station.asciiName);
 
-        EventBus.getDefault().post(new PlayStatusEvent(PlayStatusEvent.PlayStatus.PLAYING));
         mBinding.imgPlayStatus.setImageResource(R.drawable.ic_pause);
         isPlaying = true;
 
@@ -146,16 +146,16 @@ public class FragmentPlayerBottom extends BaseTiFragment<FragmentPlayerBottomPre
     @Subscribe
     public void onMediaPlayerStateChange(MediaPlayerStateChangeEvent event) {
         if (event.state == ExoPlayer.STATE_READY) {
-            mBinding.pbLoading.setVisibility(View.GONE);
+            mBinding.pbLoading.setVisibility(View.INVISIBLE);
             mBinding.imgPlayStatus.setVisibility(View.VISIBLE);
             mBinding.imgPlayStatus.setImageResource(R.drawable.ic_pause_circle);
             isPlaying = true;
         } else if (event.state == ExoPlayer.STATE_BUFFERING) {
             mBinding.pbLoading.setVisibility(View.VISIBLE);
-            mBinding.imgPlayStatus.setVisibility(View.GONE);
+            mBinding.imgPlayStatus.setVisibility(View.INVISIBLE);
             isPlaying = false;
         } else {
-            mBinding.pbLoading.setVisibility(View.GONE);
+            mBinding.pbLoading.setVisibility(View.INVISIBLE);
             mBinding.imgPlayStatus.setVisibility(View.VISIBLE);
             mBinding.imgPlayStatus.setImageResource(R.drawable.ic_play_circle);
             isPlaying = false;

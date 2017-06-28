@@ -9,5 +9,7 @@ import com.mhealth.core.mvp.BaseTiView;
 
 public interface FragmentChannelListView extends BaseTiView{
 
+    void onGetTokenError();
+
     void displayStations(Stations stationList);
 }

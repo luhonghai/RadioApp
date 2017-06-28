@@ -1,5 +1,7 @@
 package com.jae.radioapp.ui;
 
+import com.google.gson.Gson;
+import com.halosolutions.library.RadioToken;
 import com.jae.radioapp.RadioApplication;
 import com.jae.radioapp.data.local.PreferenceHelper;
 import com.jae.radioapp.data.model.Area;
@@ -35,7 +37,26 @@ public class FragmentChannelListPresenter extends BaseTiPresenter<FragmentChanne
         return mPref.getAreas();
     }
 
-    // remote
+    public void getAreaId(Double lat, Double lng) {
+        manageSubscription(
+                new RadioToken(RadioApplication.getInstance()).request(lat, lng)
+                        .doOnSubscribe(() -> sendToView(view -> view.showLoading()))
+                        .doAfterTerminate(() -> sendToView(view -> view.hideLoading()))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(authToken -> {
+                            if (authToken.getRaw().toUpperCase().equals("OUT")) {
+                                sendToView(view -> view.onGetTokenError());
+                            } else {
+                                mPref.saveString(PreferenceHelper.KEY_AUTH_TOKEN, new Gson().toJson(authToken));
+                                getStations(authToken.getAreaId());
+                            }
+                        }, throwable -> {
+                            throwable.printStackTrace();
+                            sendToView(view -> view.onGetTokenError());
+                        })
+        );
+    }
 
     public void getStations(String areaId) {
         manageSubscription(
@@ -54,4 +75,5 @@ public class FragmentChannelListPresenter extends BaseTiPresenter<FragmentChanne
                 })
         );
     }
+
 }

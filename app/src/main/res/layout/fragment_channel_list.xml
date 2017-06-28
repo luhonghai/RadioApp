@@ -1,19 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:background="#EEE"
-        >
+        android:orientation="vertical">
 
         <Button
+            android:id="@+id/btn_select_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Current Area: ?"
-            android:id="@+id/btn_select_area"
+            android:text="Current Area: ?" />
+
+        <LinearLayout
+            android:id="@+id/layout_retry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/can_not_load_token"
+                android:textColor="@color/colorBlack"
+                android:textSize="18dp" />
+
+            <Button
+                android:id="@+id/btn_retry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/colorBlack"
+                android:text="@string/retry"
+                android:textColor="#FFF" />
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/pb_loading"
+            android:visibility="gone"
+            tools:visibility="visible"
             />
 
         <android.support.v7.widget.RecyclerView

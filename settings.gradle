@@ -1,3 +1,6 @@
 include ':app'
 //include ':android-core-module'
 //project(':android-core-module').projectDir = new File(settingsDir, '../android-core-module/library')
+
+include ':radio-token'
+project(':radio-token').projectDir = new File(settingsDir, '../RadioToken/library')

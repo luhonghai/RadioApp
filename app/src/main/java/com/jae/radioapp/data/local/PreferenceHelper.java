@@ -23,6 +23,8 @@ import java.util.List;
 
 public class PreferenceHelper {
 
+    public static final String KEY_AUTH_TOKEN = "KEY_AUTH_TOKEN";
+
     SharedPreferences mPref;
 
     public PreferenceHelper(Context mContext) {

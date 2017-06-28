@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">RadioApp</string>
     <string name="schedule">Today Schedule</string>
+
+    <string name="can_not_load_token">Can not load channels from your location</string>
+    <string name="retry">Retry</string>
 </resources>

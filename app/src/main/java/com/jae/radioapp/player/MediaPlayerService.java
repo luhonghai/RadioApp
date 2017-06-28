@@ -142,7 +142,9 @@ public class MediaPlayerService extends Service {
             public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {}
 
             @Override
-            public void onLoadingChanged(boolean isLoading) {}
+            public void onLoadingChanged(boolean isLoading) {
+                Timber.e("onLoadingChanged=" + isLoading);
+            }
 
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
