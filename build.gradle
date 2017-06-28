@@ -20,9 +20,9 @@ allprojects {
     repositories {
 //        maven { url 'https://maven.google.com' }
         jcenter()
-//        maven {
-//            url 'http://nexus.manadrdev.com/content/repositories/releases/'
-//        }
+        maven {
+            url 'http://nexus.manadrdev.com/content/repositories/releases/'
+        }
     }
 }
 
