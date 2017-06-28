@@ -9,12 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.gson.Gson;
 import com.jae.radioapp.R;
+import com.jae.radioapp.data.evenbus.MediaPlayerStateChangeEvent;
 import com.jae.radioapp.data.evenbus.OpenStationEvent;
 import com.jae.radioapp.data.evenbus.PlayStatusEvent;
 import com.jae.radioapp.data.model.Station;
 import com.jae.radioapp.databinding.FragmentPlayerBottomBinding;
+import com.jae.radioapp.player.MediaPlayerService;
 import com.mhealth.core.mvp.BaseTiFragment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -88,6 +91,36 @@ public class FragmentPlayerBottom extends BaseTiFragment<FragmentPlayerBottomPre
         });
     }
 
+    @Override
+    public void showLoading() {
+//        super.showLoading();
+        mBinding.pbLoading.setVisibility(View.VISIBLE);
+        mBinding.imgPlayStatus.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void hideLoading() {
+//        super.hideLoading();
+        mBinding.pbLoading.setVisibility(View.GONE);
+        mBinding.imgPlayStatus.setVisibility(View.VISIBLE);
+    }
+
+
+    // ---------- API CALLBACK ----------
+    // ---------- API CALLBACK ----------
+    // ---------- API CALLBACK ----------
+    @Override
+    public void onStreamUrlLoaded(String streamURL) {
+        Intent intent = new Intent(getActivity(), MediaPlayerService.class);
+        intent.setAction(MediaPlayerService.ACTION_PLAY_STREAM);
+        intent.putExtra(MediaPlayerService.EXTRA_DATA, streamURL);
+        getActivity().startService(intent);
+    }
+
+    // ---------- EVENT BUS ----------
+    // ---------- EVENT BUS ----------
+    // ---------- EVENT BUS ----------
+
     @Subscribe
     public void onOpenStation(OpenStationEvent event) {
         currentStation = event.station;
@@ -99,8 +132,35 @@ public class FragmentPlayerBottom extends BaseTiFragment<FragmentPlayerBottomPre
         EventBus.getDefault().post(new PlayStatusEvent(PlayStatusEvent.PlayStatus.PLAYING));
         mBinding.imgPlayStatus.setImageResource(R.drawable.ic_pause);
         isPlaying = true;
+
+        // send event to MediaPlayerService to display content
+        Intent intent = new Intent(getActivity(), MediaPlayerService.class);
+        intent.setAction(MediaPlayerService.ACTION_PLAY_NEW);
+        intent.putExtra(MediaPlayerService.EXTRA_DATA, new Gson().toJson(station));
+        getActivity().startService(intent);
+
+        // load stream url
+        getPresenter().getStreamUrl();
     }
 
+    @Subscribe
+    public void onMediaPlayerStateChange(MediaPlayerStateChangeEvent event) {
+        if (event.state == ExoPlayer.STATE_READY) {
+            mBinding.pbLoading.setVisibility(View.GONE);
+            mBinding.imgPlayStatus.setVisibility(View.VISIBLE);
+            mBinding.imgPlayStatus.setImageResource(R.drawable.ic_pause_circle);
+            isPlaying = true;
+        } else if (event.state == ExoPlayer.STATE_BUFFERING) {
+            mBinding.pbLoading.setVisibility(View.VISIBLE);
+            mBinding.imgPlayStatus.setVisibility(View.GONE);
+            isPlaying = false;
+        } else {
+            mBinding.pbLoading.setVisibility(View.GONE);
+            mBinding.imgPlayStatus.setVisibility(View.VISIBLE);
+            mBinding.imgPlayStatus.setImageResource(R.drawable.ic_play_circle);
+            isPlaying = false;
+        }
 
+    }
 
 }

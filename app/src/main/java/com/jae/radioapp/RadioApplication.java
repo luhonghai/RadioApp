@@ -1,5 +1,7 @@
 package com.jae.radioapp;
 
+import android.support.multidex.MultiDex;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
 import com.jae.radioapp.injection.component.AppComponent;
@@ -23,6 +25,9 @@ public class RadioApplication extends BaseApplication {
     public void onCreate() {
         super.onCreate();
         instance = this;
+
+        // enable multi dex
+        MultiDex.install(this);
 
         // fabric
         Fabric.with(this, new Crashlytics());
