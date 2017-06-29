@@ -8,8 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="?attr/selectableItemBackground"
-        android:foreground="?attr/selectableItemBackground"
+        android:background="#FFF"
         >
 
         <FrameLayout
@@ -75,18 +74,17 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="10dp"
                 android:tint="@color/colorPlay"
-                app:srcCompat="@drawable/ic_pause" />
+                app:srcCompat="@drawable/ic_pause_circle" />
 
             <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="15dp"
+                android:layout_marginRight="20dp"
                 android:id="@+id/pb_loading"
                 android:visibility="gone"
                 tools:visibility="visible"
-
                 />
 
         </RelativeLayout>

@@ -8,5 +8,5 @@ import com.mhealth.core.mvp.BaseTiView;
 
 public interface FragmentPlayerBottomView extends BaseTiView{
 
-    void onStreamUrlLoaded(String streamURL);
+    
 }

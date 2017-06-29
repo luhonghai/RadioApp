@@ -113,8 +113,7 @@ dependencies {
     provided 'javax.annotation:jsr250-api:1.0'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.5'
 
-    // ExoPlayer
-    compile 'com.google.android.exoplayer:exoplayer:r2.3.0'
+
 
     // XML Parser
     compile('com.squareup.retrofit2:converter-simplexml:2.3.0') {
@@ -129,6 +128,13 @@ dependencies {
 
     // RadioToken
     compile project(':radio-token')
+    // RadioRTMPDump
+    compile project(':radio-rtmp-dump')
+
+    // ExoPlayer
+    compile 'com.google.android.exoplayer:exoplayer:r2.3.0'
+//    compile project(':exoplayer-library')
+    compile 'net.butterflytv.utils:rtmp-client:0.2.6'
 
 }
 // ADD THIS AT THE BOTTOM

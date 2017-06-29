@@ -71,12 +71,12 @@ public class FragmentPlayerBottom extends BaseTiFragment<FragmentPlayerBottomPre
     private void initUI() {
         mBinding.imgPlayStatus.setOnClickListener(v -> {
             if (isPlaying) {
-                mBinding.imgPlayStatus.setImageResource(R.drawable.ic_play);
+                mBinding.imgPlayStatus.setImageResource(R.drawable.ic_play_circle);
                 Intent intent = new Intent(getActivity(), MediaPlayerService.class);
                 intent.setAction(MediaPlayerService.ACTION_PAUSE);
                 getActivity().startService(intent);
             } else {
-                mBinding.imgPlayStatus.setImageResource(R.drawable.ic_pause);
+                mBinding.imgPlayStatus.setImageResource(R.drawable.ic_pause_circle);
                 Intent intent = new Intent(getActivity(), MediaPlayerService.class);
                 intent.setAction(MediaPlayerService.ACTION_RESUME);
                 getActivity().startService(intent);
@@ -110,13 +110,7 @@ public class FragmentPlayerBottom extends BaseTiFragment<FragmentPlayerBottomPre
     // ---------- API CALLBACK ----------
     // ---------- API CALLBACK ----------
     // ---------- API CALLBACK ----------
-    @Override
-    public void onStreamUrlLoaded(String streamURL) {
-        Intent intent = new Intent(getActivity(), MediaPlayerService.class);
-        intent.setAction(MediaPlayerService.ACTION_PLAY_STREAM);
-        intent.putExtra(MediaPlayerService.EXTRA_DATA, streamURL);
-        getActivity().startService(intent);
-    }
+
 
     // ---------- EVENT BUS ----------
     // ---------- EVENT BUS ----------
@@ -130,7 +124,7 @@ public class FragmentPlayerBottom extends BaseTiFragment<FragmentPlayerBottomPre
         mBinding.tvStationName.setText(station.name);
         mBinding.tvStationNameAscii.setText(station.asciiName);
 
-        mBinding.imgPlayStatus.setImageResource(R.drawable.ic_pause);
+        mBinding.imgPlayStatus.setImageResource(R.drawable.ic_pause_circle);
         isPlaying = true;
 
         // send event to MediaPlayerService to display content
@@ -138,9 +132,6 @@ public class FragmentPlayerBottom extends BaseTiFragment<FragmentPlayerBottomPre
         intent.setAction(MediaPlayerService.ACTION_PLAY_NEW);
         intent.putExtra(MediaPlayerService.EXTRA_DATA, new Gson().toJson(station));
         getActivity().startService(intent);
-
-        // load stream url
-        getPresenter().getStreamUrl();
     }
 
     @Subscribe

@@ -9,8 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -24,7 +24,6 @@ import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
@@ -35,8 +34,10 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.halosolutions.rtmpdump.RTMPSuck;
 import com.jae.radioapp.R;
 import com.jae.radioapp.data.evenbus.MediaPlayerStateChangeEvent;
+import com.jae.radioapp.data.local.PreferenceHelper;
 import com.jae.radioapp.data.model.Station;
 
 import org.greenrobot.eventbus.EventBus;
@@ -60,18 +61,22 @@ public class MediaPlayerService extends Service {
 
     public static String EXTRA_DATA = "com.jae.radio.EXTRA_DATA";
     public static String ACTION_PLAY_NEW = "com.jae.radio.ACTION_PLAY_NEW";
-    public static String ACTION_PLAY_STREAM = "com.jae.radio.ACTION_PLAY_STREAM";
     public static String ACTION_RESUME = "com.jae.radio.ACTION_RESUME";
     public static String ACTION_PAUSE = "com.jae.radio.ACTION_PAUSE";
 
     // Binder given to clients
     private final IBinder iBinder = new LocalBinder();
 
+    // variables for player
     SimpleExoPlayer exoPlayer;
-    Station playingStation;
-    String  playingStreamUrl;
+    Station currentStation;
+//    String  playingStreamUrl;
 
-    @Nullable
+    // variables for RTMPDump
+//    HashMap<String, RTMPSuck> rtmpSuckHashMap;
+//    HashMap<String, Integer> rtmpSuckPortMap;
+    int startPort = 2135;
+
     @Override
     public IBinder onBind(Intent intent) {
         return iBinder;
@@ -81,28 +86,38 @@ public class MediaPlayerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent == null) return super.onStartCommand(intent, flags, startId);
+
         Timber.e("onStartCommand()=" + intent.getAction());
 
         // init exoPlayer in case of not init yet
         if (exoPlayer == null) initPlayer();
 
+        // init map of rtmpsuck in case of not init yet
+
         // check ACTION
         try {
             String action = intent.getAction();
-            if (ACTION_PLAY_NEW.equals(action)) { // play new stations
+            if (ACTION_PLAY_NEW.equals(action)) { // open new
+//                exoPlayer.stop(); // stop player
+
                 String stationData = intent.getStringExtra(EXTRA_DATA);
                 Type type = new TypeToken<Station>(){}.getType();
-                playingStation = new Gson().fromJson(stationData, type);
+                Station station = new Gson().fromJson(stationData, type);
+                openStation(station);
+
+                // build notification
                 buildNotification(PlaybackStatus.PLAYING);
-            } else if (ACTION_PLAY_STREAM.equals(action)) { // play new streams url
-                playingStreamUrl = intent.getStringExtra(EXTRA_DATA);
-                playMedia(playingStreamUrl);
             } else if (ACTION_RESUME.equals(action)) { // resume
+                playMedia(currentStation.streamUrl); // play current station
+
+                // build notification
                 buildNotification(PlaybackStatus.PLAYING);
-                playMedia(playingStreamUrl);
-            } else if (ACTION_PAUSE.equals(action)) { // pause
+            } else if (ACTION_PAUSE.equals(action)) {
+                exoPlayer.stop(); // stop player
+
+                // build notification
                 buildNotification(PlaybackStatus.PAUSED);
-                exoPlayer.stop();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -142,9 +157,7 @@ public class MediaPlayerService extends Service {
             public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {}
 
             @Override
-            public void onLoadingChanged(boolean isLoading) {
-                Timber.e("onLoadingChanged=" + isLoading);
-            }
+            public void onLoadingChanged(boolean isLoading) {}
 
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
@@ -163,13 +176,16 @@ public class MediaPlayerService extends Service {
     private void playMedia(String streamUrl) {
         exoPlayer.stop();
 
+        Timber.e("playMedia streamUrl=" + streamUrl);
+
         // Produces DataSource instances through which media data is loaded.
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getApplicationContext(), getApplicationContext().getPackageName());
 
         MediaSource mediaSource = null;
 
         if (streamUrl.startsWith("rtmp")) {
-            mediaSource = new HlsMediaSource(Uri.parse(streamUrl), dataSourceFactory, null, null);
+            RtmpDataSource.RtmpDataSourceFactory rtmpDataSourceFactory = new RtmpDataSource.RtmpDataSourceFactory();
+            mediaSource = new ExtractorMediaSource(Uri.parse(streamUrl), rtmpDataSourceFactory, new DefaultExtractorsFactory(), null, null);
         } else {
             mediaSource = new ExtractorMediaSource(Uri.parse(streamUrl), dataSourceFactory,
                     new DefaultExtractorsFactory(), null, null);
@@ -227,12 +243,11 @@ public class MediaPlayerService extends Service {
                 .setLargeIcon(largeIcon)
                 .setSmallIcon(android.R.drawable.stat_sys_headset)
                 // Set Notification content information
-                .setContentTitle(playingStation.name)
-                .setContentText(playingStation.asciiName)
+                .setContentTitle(currentStation.name)
+                .setContentText(currentStation.asciiName)
                 // Add playback actions
                 .addAction(notificationAction, "pause", play_pauseAction)
-                .setOngoing(PlaybackStatus.PLAYING.equals(playbackStatus))
-                ;
+                .setOngoing(PlaybackStatus.PLAYING.equals(playbackStatus));
 
         ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notificationBuilder.build());
     }
@@ -247,6 +262,55 @@ public class MediaPlayerService extends Service {
             playbackAction.setAction(ACTION_RESUME);
             return PendingIntent.getService(this, 1, playbackAction, 0);
         }
+    }
+
+    // ---------- RTMP Dump FUNCTIONS ----------
+    // ---------- RTMP Dump FUNCTIONS ----------
+    // ---------- RTMP Dump FUNCTIONS ----------
+
+    private void openStation(Station station) {
+        String token = new PreferenceHelper(getApplicationContext()).getAuthToken().getToken();
+        String stationId = station.id;
+
+        if (currentStation != null && currentStation.id.equals(station.id)) {
+            return;
+        } else {
+            if (currentStation != null) {
+                currentStation.rtmpSuck.stop();
+            }
+
+            exoPlayer.stop();
+            currentStation = station;
+            RTMPSuck rtmpSuck = new RTMPSuck();
+            int rtmpSuckPort = startPort++;
+            currentStation.rtmpSuck = rtmpSuck;
+            currentStation.rtmpSuckPort = rtmpSuckPort;
+            createRTMPDumpProxy(token, stationId, rtmpSuck, rtmpSuckPort);
+            new Handler().postDelayed(() -> {
+                getPlayingStreamAndPlay(token, stationId, rtmpSuck, rtmpSuckPort);
+            }, 100);
+        }
+
+        // TBS < station ID
+        //rtmpe://f-radiko.smartstream.ne.jp/TBS/_definst_/simul-stream.stream
+        // -> rtmp://127.0.0.1:1935/TBS/_definst_/simul-stream.stream
+    }
+
+    private void createRTMPDumpProxy(String token, String stationId, RTMPSuck rtmpSuck, int rtmpSuckPort) {
+        new Thread(() -> {
+            rtmpSuck.init("S:" + token, rtmpSuckPort);
+        }).start();
+    }
+
+    private void getPlayingStreamAndPlay(String token, String stationId, RTMPSuck rtmpSuck, int rtmpSuckPort) {
+        Timber.e("getPlayingStreamAndPlay():" + token + "," + stationId + "," + rtmpSuck + "," + rtmpSuckPort);
+
+        rtmpSuck.update("S:" + token,"rtmpe://f-radiko.smartstream.ne.jp/" +  stationId + "/_definst_", stationId + "/_definst_");
+
+        String streamUrl = "rtmp://127.0.0.1:" + rtmpSuckPort + "/" + stationId + "/_definst_/simul-stream.stream";
+        currentStation.streamUrl = streamUrl;
+
+        playMedia(streamUrl);
     }
 
 }

@@ -1,5 +1,7 @@
 package com.jae.radioapp.data.model;
 
+import com.halosolutions.rtmpdump.RTMPSuck;
+
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
@@ -35,6 +37,10 @@ public class Station {
     public Scd scd;
 
     public String areaId;
+
+    public String streamUrl;
+    public RTMPSuck rtmpSuck;
+    public int rtmpSuckPort;
 
 }
 

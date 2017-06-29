@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.halosolutions.library.data.AuthToken;
 import com.jae.radioapp.RadioApplication;
 import com.jae.radioapp.data.model.Area;
 
@@ -50,6 +51,17 @@ public class PreferenceHelper {
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<>();
+        }
+    }
+
+    public AuthToken getAuthToken() {
+        try {
+            String data = mPref.getString(KEY_AUTH_TOKEN, "");
+            Type type = new TypeToken<AuthToken>(){}.getType();
+            return new Gson().fromJson(data, type);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

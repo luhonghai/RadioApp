@@ -4,3 +4,6 @@ include ':app'
 
 include ':radio-token'
 project(':radio-token').projectDir = new File(settingsDir, '../RadioToken/library')
+
+include ':radio-rtmp-dump'
+project(':radio-rtmp-dump').projectDir = new File(settingsDir, '../RadioRTMPDump/library')
